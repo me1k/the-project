@@ -1,27 +1,41 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { Router, Route, Switch, Redirect } from 'react-router-dom';
+import firebase from 'firebase';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import AppContext from '../../context/AppContext';
-import styled from 'styled-components';
+import LandingPage from '../LandingPage/LandingPage';
+import * as Styled from './styled';
+import Home from '../Home/Home';
 
-interface IProps {}
+interface IProps {
+  authenticated: boolean;
+  handleLogout: () => void;
+}
 
 function AuthScreen(props: IProps) {
   const context = useContext(AppContext);
+  let currentUser = firebase.auth().currentUser;
+  let uid = currentUser && currentUser.uid;
+  let ref = firebase.database().ref('/');
 
-  return <h1>{context.authenticated ? 'Logged in' : 'Not logged in'}</h1>;
+  return (
+    <Styled.AuthScreenWrapper>
+      <>
+        {props.authenticated ? (
+          <Home
+            currentUser={currentUser && currentUser.displayName}
+            handleLogout={() => {
+              firebase.auth().signOut();
+            }}
+            uid={uid}
+            photoURL={currentUser && currentUser.photoURL}
+          />
+        ) : (
+          <LandingPage />
+        )}
+      </>
+    </Styled.AuthScreenWrapper>
+  );
 }
 
 export default AuthScreen;
-
-const LoginBody = styled.div`
-    display: flex;
-    justify-content: center;
-    align-item: center
-
-    background-color: #2d2d2d
-`;
-
-const LoginForm = styled.div`
-  width: 300px;
-  height: 400px;
-  border: 1px solid #fff;
-`;

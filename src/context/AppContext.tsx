@@ -2,12 +2,10 @@ import React, { createContext } from 'react';
 
 export interface IAppContext {
   authenticated: boolean;
-  login: () => void;
 }
 
 const AppContext = createContext<IAppContext>({
-  authenticated: false,
-  login: () => {}
+  authenticated: false
 });
 
 export const AppContextProvider = AppContext.Provider;
