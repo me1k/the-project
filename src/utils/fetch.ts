@@ -11,7 +11,7 @@ export const searchStock = (value: string) => {
 
 export const fetchStock = (value: string) => {
   return fetch(
-    `https://finnhub.io/api/v1/quote?symbol=${value}&token=breeeofrh5rckh45b320`,
+    `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${value}&apikey=8OTC1CDBBWB33FUB`,
     {
       headers: {
         'Content-Type': 'application/json'

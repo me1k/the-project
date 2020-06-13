@@ -3,7 +3,15 @@ import Home from './views/Home/Home';
 import LandingPage from './views/LandingPage/LandingPage';
 import { Route, Redirect } from 'react-router-dom';
 
-function PrivateRoute({ component: Component, props, ...rest }: any) {
+interface IProps {
+  photoURL: string | null;
+  uid: string | null;
+  currentUser: string | null;
+  handleLogout: () => void;
+  authenticated: boolean | null;
+}
+
+function PrivateRoute(props: IProps, { component: Component, ...rest }: any) {
   const { authenticated, photoURL, handleLogout, currentUser, uid } = props;
 
   return (

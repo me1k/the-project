@@ -1,7 +1,6 @@
-import React, { useContext, useEffect } from 'react';
-import { Router, Route, Switch, Redirect } from 'react-router-dom';
-import firebase from 'firebase';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import React, { useContext } from 'react';
+import * as firebase from 'firebase/app';
+
 import AppContext from '../../context/AppContext';
 import LandingPage from '../LandingPage/LandingPage';
 import * as Styled from './styled';

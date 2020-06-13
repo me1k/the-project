@@ -1,10 +1,11 @@
-import React, { useState, useEffect, SyntheticEvent } from 'react';
-import firebase from 'firebase';
+import React, { useState, useEffect, SyntheticEvent, useRef } from 'react';
+import * as firebase from 'firebase/app';
 import * as Styled from './styled';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { AiOutlinePlusSquare } from 'react-icons/ai';
 import { fetchStock, searchStock } from '../../utils/fetch';
-import history from 'history';
 
-interface IProps {
+interface IProps extends RouteComponentProps {
   currentUser: string | null;
   handleLogout: () => void;
   uid: string | null;
@@ -23,12 +24,16 @@ interface IStock {
 }
 
 interface IPrice {
-  c: number;
-  h: number;
-  l: number;
-  o: number;
-  pc: number;
-  t: number;
+  '01. symbol': '';
+  '02. open': number;
+  '03. high': '';
+  '04. low': '';
+  '05. price': '';
+  '06. volume': '';
+  '07. latest trading day': '';
+  '08. previous close': '';
+  '09. change': '';
+  '10. change percent': '';
 }
 
 function Home(props: IProps) {
@@ -72,7 +77,10 @@ function Home(props: IProps) {
     try {
       await fetchStock(value).then(data => {
         if (data.status === 200) {
-          data.json().then(res => setPrices(res));
+          data.json().then(res => {
+            setPrices(res['Global Quote']);
+            console.log(res['Global Quote']);
+          });
           setStocks([]);
           setName(name);
         }
@@ -124,15 +132,16 @@ function Home(props: IProps) {
       </Styled.SearchContainer>
 
       <Styled.StockContainer>
-        <div>Name: {name && name}</div>
-        <div>Current: {prices && (prices.c * 0.88).toFixed(2)}€</div>
-        <div>Previous: {prices && (prices.pc * 0.88).toFixed(2)}€</div>
-        <div>High: {prices && (prices.h * 0.88).toFixed(2)}€</div>
-        <div>Low: {prices && (prices.l * 0.88).toFixed(2)}€</div>
-        <div>Open: {prices && (prices.o * 0.88).toFixed(2)}€</div>
+        {stocks.length === 0 ? (
+          <Styled.AddIconContainer>
+            <AiOutlinePlusSquare size="4em" color="#fff" />
+          </Styled.AddIconContainer>
+        ) : (
+          stocks.map((item, idx) => <div key={idx}>{item['1. symbol']}</div>)
+        )}
       </Styled.StockContainer>
     </>
   );
 }
 
-export default Home;
+export default withRouter(Home);

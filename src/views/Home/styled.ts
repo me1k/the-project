@@ -70,6 +70,8 @@ export const StockListItem = styled.div`
 export const ButtonContainer = styled.div``;
 
 export const StockContainer = styled.div`
-  background-color: #fff;
-  padding: 20px;
+  display: flex;
+  padding-left: 20px;
 `;
+
+export const AddIconContainer = styled.div``;

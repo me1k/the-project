@@ -1,11 +1,17 @@
 import React, { useState, Suspense, useEffect } from 'react';
-import { Router, Route, useHistory } from 'react-router-dom';
-import * as Styled from './styled';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 import './App.scss';
-import { AppContextProvider, IAppContext } from './context/AppContext';
-import firebase from 'firebase';
+import { AppContextProvider } from './context/AppContext';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 import { config } from './firebaseConfig';
-import { Switch } from 'react-native';
+import Home from './views/Home/Home';
+import PrivateRoute from './PrivateRoute';
+import LandingPage from './views/LandingPage/LandingPage';
+import { createBrowserHistory } from 'history';
+import StockDetail from './views/StockDetail/StockDetail';
 
 interface IUser {
   name: string;
@@ -21,7 +27,9 @@ firebase.initializeApp(config);
 
 function App() {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
-  const history = useHistory();
+  const history = createBrowserHistory();
+  let currentUser = firebase.auth().currentUser;
+  let uid = currentUser && currentUser.uid;
   const handleLogout = () => {
     firebase.auth().signOut();
   };
@@ -34,12 +42,27 @@ function App() {
 
   return (
     <AppContextProvider value={{ authenticated: !authenticated }}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <AuthScreenComponent
-          authenticated={authenticated}
-          handleLogout={handleLogout}
-        />
-      </Suspense>
+      <Router>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() =>
+              authenticated ? (
+                <Home
+                  currentUser={currentUser && currentUser.displayName}
+                  photoURL={currentUser && currentUser.photoURL}
+                  handleLogout={handleLogout}
+                  uid={uid}
+                />
+              ) : (
+                <LandingPage />
+              )
+            }
+          />
+          <Route exact path="/stock/" render={() => <StockDetail />} />
+        </Switch>
+      </Router>
     </AppContextProvider>
   );
 }

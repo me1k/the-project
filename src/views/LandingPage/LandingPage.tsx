@@ -1,7 +1,8 @@
 import React from 'react';
-import firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import { uiConfig } from '../../firebaseConfig';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+
 import * as Styled from './styled';
 
 function LandingPage() {
